@@ -5,5 +5,14 @@
 			*
 		FROM dept
 	</select>
+	
+	<select id="getEmpnoAllData" resultType="EmpVO">
+	select
+		*
+	from emp as e
+	inner join dept as d
+	on e.DEPTNO = d.DEPTNO 
+	where e.EMPNO = #{empno}	
+	</select>
 
 </mapper>
