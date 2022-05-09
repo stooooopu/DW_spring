@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.first_spring.mapper.EmpMapper;
 import com.example.first_spring.vo.EmpVO;
+import com.example.first_spring.vo.UserVO;
 
 @Service
 public class EmpService {
@@ -36,12 +38,7 @@ public class EmpService {
 		return empMapper.getHiredate();
 	}
 	
-	public List<EmpVO> getJobManager(String job, int sal){
-		if(job.equals("SALESMAN")) {
-			return null;
-		}
-		return empMapper.getJobManager(job, sal);
-	}
+	
 	
 	// 문제 0.
 	public List<EmpVO> getSalDeptno(int sal){
@@ -87,4 +84,73 @@ public class EmpService {
 	public EmpVO getEmpnoAllData(int empno) {
 		return empMapper.getEmpnoAllData(empno);
 	}
+	
+	
+	// insert와 update는 비슷
+	@Transactional(rollbackFor = {Exception.class})
+	public int setEmp(EmpVO vo) {
+		int rows = empMapper.insertEmp(vo); // 총 몇 행이 insert되었는지 return
+		return rows;
+	}
+	
+	// {NullPointerException.class}) : null일 때만 오류 잡기 
+	@Transactional(rollbackFor = {Exception.class})
+	public int getEmpRemoveCount(int empno) { // 총 몇 행이 delete되었는지 return
+		return empMapper.deleteEmp(empno);
+	}
+	
+//	public int getEmpUpdateCount(EmpVO vo) { // 총 몇 행이 update되었는지 return
+//		return empMapper.updateEmp(vo);
+//	}
+	
+	
+	// sql결과가 없으면 null뜸
+	// 강제로 오류를 낸 결과
+	// 이전 commit한 시점으로 돌아감
+	// rollbackFor : 이전 history로 넘어감
+	@Transactional(rollbackFor = {Exception.class})
+	public int getEmpUpdateCount(EmpVO vo) { 
+		int rows = empMapper.updateEmp(vo);
+		
+		// 밑에 결과는 error
+		UserVO user = null;
+		String name = user.getName();
+		System.out.println(name);
+		// 현재 서버는 에러 -> 하지만 데이터는 업데이트는 됨
+		// status: 500 (자바에서 에러)
+		// trace에서 맨 첫줄을 해석
+		return rows;
+	}
+		
+	@Transactional(rollbackFor = {Exception.class})
+	public List<EmpVO> getJobManager(String job, int sal){
+		//getJobManager의 결과를 list에 담음 -> 이미 걸러진 결과에 for문으로 set만 해줌
+		List<EmpVO> list =empMapper.getJobManager(job, sal);
+		
+		int comm = 500;
+		int rows = 0;
+		
+		for(int i=0; i<list.size(); i++) {
+			// 만약 이전에 comm을 받았던 사람에게 추가 500을 comm으로 주려면
+			int PlusComm = list.get(i).getComm();
+			list.get(i).setComm(comm + PlusComm);
+			EmpVO vo = list.get(i);
+			
+			// update가 실행될 때마다 rows 증가
+			rows += empMapper.updateEmp(vo);
+		}
+		
+		if(rows > 0) {
+			return empMapper.getJobManager(job, sal);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }

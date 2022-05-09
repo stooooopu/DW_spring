@@ -3,8 +3,13 @@ package com.example.first_spring.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.first_spring.service.EmpService;
@@ -44,12 +49,6 @@ public class EmpController {
 		return empService.getHiredate();
 	}
 	
-	@GetMapping("/emp/job/{jobName}/sal/{sal}")
-	public List<EmpVO> callJobManager(@PathVariable("jobName") String job,
-			@PathVariable("sal") int sal) {
-		return empService.getJobManager(job, sal);
-	}
-	
 	//문제 0. 급여 1500을 파라미터로 받고 부서가 10, 30에 속하는 사원 중 급여가 1500을 넘는 사원의 이름 및 급여 조회.
 	@GetMapping("/emp/sal/{sal}")
 	public List<EmpVO> callSalDeptno(@PathVariable("sal") int sal) {
@@ -81,5 +80,48 @@ public class EmpController {
 	public EmpVO callEmpnoAllData(@PathVariable("empno") int empno) {
 		return empService.getEmpnoAllData(empno);
 	}
+	
+	
+	// empTable에 insert
+	@PostMapping("/emp")
+	// count해주기 때문에 return intType
+	// @RequestBody : 파라미터로 넘어오는 VO를 대신 new해줌
+	public int callEmpSet(@RequestBody EmpVO empVo) {
+		System.out.println("사원이름은 : "+empVo.getEname());
+		System.out.println("사원번호는 : "+empVo.getEmpno());
+		System.out.println("직업은 : "+empVo.getJob());
+		System.out.println("사수번호는 : "+empVo.getMgr());
+		System.out.println("입사날짜는 : "+empVo.getHiredate());
+		System.out.println("급여는 : "+empVo.getSal());
+		System.out.println("보너스는 : "+empVo.getComm());
+		System.out.println("부서번호는 : "+empVo.getDeptno());
+		return empService.setEmp(empVo);
+	} // 이렇게 받은걸 제이쿼리로 보냄
+	
+	// @DeleteMapping : 자원 삭제
+	@DeleteMapping("/emp/empno/{empno}")
+	public int callEmpRemove(@PathVariable("empno") int empno) {
+		return empService.getEmpRemoveCount(empno);
+	}
+	
+	// @PatchMapping : 자원 수정
+	@PatchMapping("/emp")
+	public int callEmpUpdate(@RequestBody EmpVO empVo) {
+		return empService.getEmpUpdateCount(empVo);
+	}
+	
+	// job = MANAGER / sal >=2500 사원의 comm 500으로 update
+	// 이름 직업 커미션 조회
+	@GetMapping("/emp/job/{jobName}/sal/{sal}")
+	public List<EmpVO> callJobManager(@PathVariable("jobName") String job,
+			@PathVariable("sal") int sal) {
+		
+		return empService.getJobManager(job, sal);
+	}	
+	
+	
+	
+	
+	
 	
 }

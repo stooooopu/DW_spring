@@ -41,14 +41,7 @@
 		WHERE 
 			HIREDATE between '1980-12-17' and '1982-01-23'
 	</select>
-	<select id="getJobManager" resultType="EmpVO">
-		SELECT
-			ename
-		FROM emp 
-		WHERE JOB = #{job}
-		and 
-		SAL >= #{sal}
-	</select>
+	
 	
 	
 	<!-- 문제 0. 부서가 10, 30에 속하는 사원 중 급여가 1500을 넘는 사원의 이름 및 급여 조회 -->
@@ -101,7 +94,6 @@
 		where date_format(HIREDATE ,'%m') = 12
 		order by SAL desc 
 		limit 1 -->
-	
 	</select>
 	
 	<!-- 문제 4. 특정 job에 속한 사원번호, 사원 이름, 입사날짜 조회 -->
@@ -144,5 +136,51 @@
 	inner join dept as d
 	on e.DEPTNO = d.DEPTNO 
 	where e.EMPNO = #{empno}	
+	</select>
+	
+	
+	<!-- insert query -->
+	<!-- insert시에 해당테이블의 not null확인 -->
+	<!-- oracle은 Mybatis Insert할때 PK 문법이 다름(시퀀스를 추가)-->
+	<insert id="insertEmp">
+		INSERT INTO emp
+		(
+			empno,
+			ename,
+			deptno,
+			hiredate			
+		)
+		VALUES
+		(
+			#{empno},
+			#{ename},
+			#{deptno},
+			now()
+		)
+	</insert>
+	
+	<delete id="deleteEmp">
+		DELETE FROM emp
+		WHERE empno = #{empno}
+	</delete>
+	
+	<update id="updateEmp">
+		UPDATE emp
+		SET 
+			comm = #{comm}
+		WHERE empno = #{empno}
+	</update>
+	
+	
+	<select id="getJobManager" resultType="EmpVO">
+		select
+				empno,
+				ename , 
+				job ,
+				comm 
+		from emp 
+		where job = #{job}
+		and 
+		SAL >= #{sal}
 	</select>
 </mapper>
