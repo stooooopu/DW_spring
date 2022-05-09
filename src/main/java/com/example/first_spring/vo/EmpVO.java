@@ -17,4 +17,6 @@ public class EmpVO {
 	private int sal;
 	private int comm;
 	private int deptno;
+	
+	private DeptVO deptVo; // query로 join할 VO
 }
