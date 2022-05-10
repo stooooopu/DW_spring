@@ -129,6 +129,7 @@
 		<collection property="deptVo" resultMap="DeptVO"/>
 	</resultMap>
 	
+	
 	<select id="getEmpnoAllData" parameterType="EmpVO" resultMap="EmpVO">
 	select
 		*
@@ -159,6 +160,42 @@
 		)
 	</insert>
 	
+	<select id="getDeptno" resultType="int">
+		SELECT
+			d.deptno
+		FROM emp as e 
+		RIGHT JOIN dept as d 
+		ON e.DEPTNO = d.DEPTNO 
+		WHERE e.DEPTNO is null 
+		and 
+		d.LOC is not null 
+	</select>
+	
+	<insert id="insertNotDeptno">
+		INSERT INTO emp
+			(
+				deptno,
+				empno,
+				ename,
+				job,
+				mgr,
+				sal,
+				comm,
+				hiredate
+			)
+			VALUES
+			(
+			#{deptno},
+			#{empno},
+			#{ename},
+			#{job},
+			#{mgr},
+			#{sal},
+			#{comm},
+			now()
+			)
+	</insert>
+	
 	<delete id="deleteEmp">
 		DELETE FROM emp
 		WHERE empno = #{empno}
@@ -171,7 +208,6 @@
 		WHERE empno = #{empno}
 	</update>
 	
-	
 	<select id="getJobManager" resultType="EmpVO">
 		select
 				empno,
@@ -182,5 +218,24 @@
 		where job = #{job}
 		and 
 		SAL >= #{sal}
+	</select>
+	
+	<select id="getPracSal" resultType="EmpVO">
+		select 
+			*
+		from emp e 
+		where empno = #{empno}
+	</select>
+	
+	<delete id="deletePracSal">
+		DELETE FROM emp
+		WHERE empno = #{empno}
+	</delete>
+	
+	<select id="getCountAName" resultType="EmpVO">
+	SELECT 
+		* 
+	FROM emp
+	WHERE ename LIKE CONCAT(#{firstWorld} , '%')
 	</select>
 </mapper>

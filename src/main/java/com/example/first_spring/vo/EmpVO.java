@@ -7,7 +7,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class EmpVO {
+public class EmpVO extends DeptVO {
 // 컬럼이름이 필드변수가 됨
 	private int empno;
 	private String ename;

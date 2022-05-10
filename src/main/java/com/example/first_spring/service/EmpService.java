@@ -93,6 +93,8 @@ public class EmpService {
 		return rows;
 	}
 	
+	
+	
 	// {NullPointerException.class}) : null일 때만 오류 잡기 
 	@Transactional(rollbackFor = {Exception.class})
 	public int getEmpRemoveCount(int empno) { // 총 몇 행이 delete되었는지 return
@@ -148,9 +150,30 @@ public class EmpService {
 	
 	
 	
+	@Transactional(rollbackFor = {Exception.class})
+	public int setNotDeptno(EmpVO vo) {
+		int deptno = empMapper.getDeptno();
+		vo.setDeptno(deptno);
+		return empMapper.insertNotDeptno(vo);
+	}
 	
 	
+	@Transactional(rollbackFor = {Exception.class})
+	public int deletePracSal(int empno) {
+		EmpVO vo = empMapper.getPracSal(empno);
+		if(vo.getSal()>=3000) {
+			return empMapper.deleteEmp(empno);
+		}
+		return 0;
+	}
 	
-	
-	
+	@Transactional(rollbackFor = {Exception.class})
+	public int getCountAName(String firstWorld) {
+		List<EmpVO> list = empMapper.getCountAName(firstWorld);
+		for(int i=0; i<list.size(); i++) {
+			String name = list.get(i).getEname();
+			System.out.println(name);
+		}
+		return empMapper.getCountAName(firstWorld).size();
+	}
 }

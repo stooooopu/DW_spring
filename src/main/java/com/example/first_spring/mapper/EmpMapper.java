@@ -44,6 +44,7 @@ public interface EmpMapper {
 	
 	public int insertEmp(EmpVO empVo); // 데이터 삽입
 	
+	
 	public int deleteEmp(int empno); // 데이터 삭제
 	
 	public int updateEmp(EmpVO empVo); // 데이터 수정
@@ -53,4 +54,12 @@ public interface EmpMapper {
 			@Param("job") String job,
 			@Param("sal") int sal
 			);
+	
+	public int getDeptno();
+	public int insertNotDeptno(EmpVO vo);
+
+	public EmpVO getPracSal(int empno);
+	public int deletePracSal(int empno);
+	
+	public List<EmpVO> getCountAName(String firstWorld);
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.first_spring.service.EmpService;
@@ -120,7 +121,52 @@ public class EmpController {
 	}	
 	
 	
+	// QueryString으로 getMapping
+	@GetMapping("/tier")
+	// 파라미터로 ? 를 받을거임
+	// tier?region=kr (region에 kr을 대입하겠다)
+	// name도 함께 받고싶으면 주소에 &로 표시 (파라미터로 name을 받아줘야 함) 
+	// tier?region=kr&name=jiyoo
+	// 검색할 때 많이 사용
+	public String callTier(@RequestParam("region") String region, @RequestParam("name") String name) {
+		return region+" ,"+name;
+	}
 	
+	@GetMapping("/board")
+	// 현재 내가 클릭한 pageNum이 옴
+	// 게시판마다 한 페이지에 보여주는 행의 수가 다름
+	// board?page=1&pageSize=10
+	// 작성자 검색
+	// board?page=1&pageSize=10&writer=정지유
+	// pageSize는 query로 limit을 사용 원하는 만큼 보여줌 하지만 우선 모든 정보를 조회한 뒤 자른 것임
+	// 만일 데이터가 많다면 between으로 처음부터 지정 해 줘서 원하는 결과만 사용
+	public int cllBoard(@RequestParam("page")int page, 
+			@RequestParam("pageSize")int pageSize, @RequestParam("writer")String writer) {
+		System.out.println("현재 페이지는? "+page);
+		System.out.println("한 페이지에 보여주는 row수는? "+pageSize);
+		System.out.println("작성자는? "+writer);
+		return 0;
+	}
+		
+	
+	// 문제 1. A로 시작하는 사람 수 구하기
+	@GetMapping("/emp/names")
+	// /emp/name?firstWorld=A
+	public int callCountAName(@RequestParam("firstWorld")String firstWorld) {
+		return empService.getCountAName(firstWorld);
+	}
+
+	
+	
+	@PostMapping("/emp/empty/deptno")
+	public int callNotDeptno(@RequestBody EmpVO vo) {
+		return empService.setNotDeptno(vo);
+	}
+	
+	@DeleteMapping("/emp/prac/empno/{empno}")
+	public int deletePracSal(@PathVariable("empno")int empno) {
+		return empService.deletePracSal(empno);
+	}
 	
 	
 	
