@@ -105,11 +105,7 @@ public class EmpController {
 		return empService.getEmpRemoveCount(empno);
 	}
 	
-	// @PatchMapping : 자원 수정
-	@PatchMapping("/emp")
-	public int callEmpUpdate(@RequestBody EmpVO empVo) {
-		return empService.getEmpUpdateCount(empVo);
-	}
+
 	
 	// job = MANAGER / sal >=2500 사원의 comm 500으로 update
 	// 이름 직업 커미션 조회
@@ -169,5 +165,38 @@ public class EmpController {
 	}
 	
 	
+	
+	
+	
+	// @PatchMapping : 자원 수정
+	@PatchMapping("/emp")
+	public int callEmpUpdate(@RequestBody EmpVO empVo) {
+		return empService.getEmpUpdateCount(empVo);
+	}
+	
+	// 사원번호가 7902인 사원 job을 SALESMAN, sal 3500으로 수정하시오
+	@PatchMapping("/emp/{empno}")
+	public int callEmpno(@RequestBody EmpVO vo, @PathVariable("empno") int empno) {
+		// mapper에 set을 해줘야함
+		vo.setEmpno(empno);
+		return empService.updateEmpno(vo, empno);
+	}
+	
+	@GetMapping("/emp/mgr/{isMgr}")
+	public List<EmpVO> callEmpIsMgrList(@PathVariable("isMgr")String isMgr){
+		return empService.getEmpIsMgrList(isMgr);
+	}
+	
+	// 사원번호가 7844 comm이 0이거나 null이면 기존 급여에서 500추가
+	// comm이 있다면 0리턴
+	@GetMapping("/emp/comm/{isComm}")
+	public List<EmpVO> callEmpno(@PathVariable("isComm") String isComm) {
+		return empService.getEmpComm(isComm);
+	}
+	
+	@PatchMapping("/emp/empno/{empno}")
+	public int callEmpSalUpdate(@PathVariable ("empno")int empno) {
+		return empService.getEmpUpdateSalCount(empno);
+	}
 	
 }

@@ -201,12 +201,7 @@
 		WHERE empno = #{empno}
 	</delete>
 	
-	<update id="updateEmp">
-		UPDATE emp
-		SET 
-			comm = #{comm}
-		WHERE empno = #{empno}
-	</update>
+	
 	
 	<select id="getJobManager" resultType="EmpVO">
 		select
@@ -238,4 +233,70 @@
 	FROM emp
 	WHERE ename LIKE CONCAT(#{firstWorld} , '%')
 	</select>
+
+
+	<!-- true가 파라미터로 들어오면 사수가 있는 사원 조회
+		 false가 파라미터로 들어오면 사수가 없는 사원 조회 
+		 Mybatis에는 boolean형이 없어서 문자로 비교해야 함-->
+	<select id="selectEmpMgr" resultType="EmpVO">
+	SELECT 
+		empno,
+		ename,
+		mgr
+	FROM emp
+	<!-- 1=1 : 뒤에 AND 조건을 쓰고 싶어서 쓴 것 -->
+	WHERE 1=1
+	<if test='isMgr.equals("true")'>
+		AND mgr IS NOT NULL
+	</if>
+	<if test='isMgr.equals("false")'>
+		AND mgr IS NULL
+	</if>
+	</select>
+	
+	<select id="getEmpComm" resultType="EmpVO">
+		SELECT
+			empno,
+			comm,
+			sal
+		FROM emp 
+		WHERE 1=1
+		<if test='isComm.equals("true")'>
+			AND comm IS NOT NULL
+		</if>
+		<if test='isComm.equals("flase")'>
+			AND comm IS NULL
+		</if>
+	</select>
+	
+	<update id="updateEmp">
+		UPDATE emp
+		SET 
+			comm = #{comm}
+		WHERE empno = #{empno}
+	</update>
+	
+	<!-- 사원번호가 7902인 사원 job을 SALESMAN, sal 3500으로 수정하시오 -->
+	<update id="updateEmpno">
+		UPDATE emp
+		SET 
+			job = #{job},
+			sal = #{sal}
+		WHERE empno = #{empno}
+	</update>
+	
+	<select id="selectEmpCommSal" resultType="EmpVO">
+	SELECT
+		empno,
+		COMM ,
+		SAL 
+	FROM emp
+	WHERE EMPNO = #{empno}
+	</select>
+	
+	<update id="updateEmpSal">
+	UPDATE emp
+	SET sal = #{sal}
+	WHERE empno = #{empno}
+	</update>
 </mapper>

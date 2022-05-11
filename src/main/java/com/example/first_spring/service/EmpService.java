@@ -86,12 +86,7 @@ public class EmpService {
 	}
 	
 	
-	// insert와 update는 비슷
-	@Transactional(rollbackFor = {Exception.class})
-	public int setEmp(EmpVO vo) {
-		int rows = empMapper.insertEmp(vo); // 총 몇 행이 insert되었는지 return
-		return rows;
-	}
+	
 	
 	
 	
@@ -175,5 +170,50 @@ public class EmpService {
 			System.out.println(name);
 		}
 		return empMapper.getCountAName(firstWorld).size();
+	}
+	
+	public List<EmpVO> getEmpIsMgrList(String isMgr){
+		return empMapper.selectEmpMgr(isMgr);
+	}
+	
+	// insert와 update는 비슷
+		@Transactional(rollbackFor = {Exception.class})
+		public int setEmp(EmpVO vo) {
+			int rows = empMapper.insertEmp(vo); // 총 몇 행이 insert되었는지 return
+			return rows;
+		}
+		
+	@Transactional(rollbackFor = {Exception.class})
+	public int updateEmpno(EmpVO vo, int empno) {
+		return empMapper.updateEmpno(vo);
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public List<EmpVO> getEmpComm(String isComm) {
+		List<EmpVO> list = empMapper.getEmpComm(isComm);
+		int plusSal = 500;
+		for(int i=0; i<list.size(); i++) {
+			int comm = list.get(i).getComm();
+			int sal = list.get(i).getSal();
+			if(comm == 0) {
+				list.get(i).setSal(sal+plusSal);
+			}
+		}
+		return empMapper.getEmpComm(isComm);
+	}
+
+	public int getEmpUpdateSalCount(int empno) {
+		// comm = 0 / null
+		EmpVO vo = empMapper.selectEmpCommSal(empno);
+		int comm = vo.getComm();
+		
+		if(comm==0) {
+			int bonus = 500;
+			int sal = vo.getSal();
+			vo.setSal(sal+bonus);
+			//update 로직추가
+			return empMapper.updateEmpSal(vo);
+		}
+		return 0;
 	}
 }

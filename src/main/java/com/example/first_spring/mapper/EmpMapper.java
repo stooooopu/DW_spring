@@ -47,7 +47,6 @@ public interface EmpMapper {
 	
 	public int deleteEmp(int empno); // 데이터 삭제
 	
-	public int updateEmp(EmpVO empVo); // 데이터 수정
 	
 	// 복수일 경우 mybatis에서 찾지를 못해서 파라미터를 밑에처럼 받아야 함
 	public List<EmpVO> getJobManager(
@@ -62,4 +61,15 @@ public interface EmpMapper {
 	public int deletePracSal(int empno);
 	
 	public List<EmpVO> getCountAName(String firstWorld);
+	
+	public List<EmpVO> selectEmpMgr(@Param("isMgr") String isMgr);
+	
+	
+	public int updateEmp(EmpVO empVo); // 데이터 수정
+	public int updateEmpno(EmpVO vo);
+	
+	public List<EmpVO> getEmpComm(String isComm);
+	
+	public EmpVO selectEmpCommSal(@Param("empno") int empno);
+	public int updateEmpSal(EmpVO vo);
 }
