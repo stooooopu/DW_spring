@@ -1,10 +1,10 @@
 package com.example.first_spring.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.first_spring.vo.EmpVO;
 
@@ -72,4 +72,7 @@ public interface EmpMapper {
 	
 	public EmpVO selectEmpCommSal(@Param("empno") int empno);
 	public int updateEmpSal(EmpVO vo);
+	
+	public List<Map<String,Object>> selectEmpMapList();
+	
 }

@@ -1,9 +1,9 @@
 package com.example.first_spring.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -199,4 +199,8 @@ public class EmpController {
 		return empService.getEmpUpdateSalCount(empno);
 	}
 	
+	@GetMapping("/emp/map/list")
+	public List<Map<String,Object>> callEmpMapList(){
+		return empService.getEmpMapList();
+	}
 }

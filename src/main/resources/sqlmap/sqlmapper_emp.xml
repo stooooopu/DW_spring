@@ -299,4 +299,19 @@
 	SET sal = #{sal}
 	WHERE empno = #{empno}
 	</update>
+	
+	<select id="selectEmpMapList" resultType="map">
+		SELECT
+			empno as 사원번호,
+			ename,
+			job,
+			sal,
+			d.deptno,
+			d.dname,
+			d.loc
+		FROM emp AS e
+		INNER JOIN dept AS d
+		ON e.deptno = d.deptno
+	</select>
+	
 </mapper>
