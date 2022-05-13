@@ -18,5 +18,5 @@ public class EmpVO extends DeptVO {
 	private int comm;
 	private int deptno;
 	
-	private DeptVO deptVo; // query로 join할 VO
+//	private DeptVO deptVo; // query로 join할 VO
 }

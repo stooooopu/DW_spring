@@ -224,4 +224,9 @@ public class EmpService {
 		return empMapper.selectEmpMapList();
 	};
 	
+	@Transactional(rollbackFor = {Exception.class})
+	public int getApi(int empno, EmpVO vo) {
+		vo.setEmpno(empno);
+		return empMapper.updateApi(vo);
+	}
 }

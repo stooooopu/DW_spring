@@ -75,4 +75,6 @@ public interface EmpMapper {
 	
 	public List<Map<String,Object>> selectEmpMapList();
 	
+	public int updateApi(EmpVO vo);
+	
 }

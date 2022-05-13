@@ -4,10 +4,12 @@
 <!-- id = MainMapper method이름 => java에서의 override -->	
 	<select id="getEmpList" resultType="EmpVO">
 		SELECT
-			empno,
-			ename, 
-			job
-		FROM emp
+			*,
+			d.dname,
+			d.loc
+		FROM emp AS e
+		JOIN dept AS d
+		ON e.deptno = d.deptno
 	</select>
 	
 	<select id="getEmp" resultType="EmpVO">
@@ -148,15 +150,19 @@
 		(
 			empno,
 			ename,
-			deptno,
-			hiredate			
+			job,
+			sal,
+			hiredate,			
+			deptno
 		)
 		VALUES
 		(
 			#{empno},
 			#{ename},
-			#{deptno},
-			now()
+			#{job},
+			#{sal},
+			#{hiredate},
+			#{deptno}
 		)
 	</insert>
 	
@@ -314,4 +320,11 @@
 		ON e.deptno = d.deptno
 	</select>
 	
+	<update id="updateApi">
+		UPDATE emp
+		SET 
+			job = #{job},
+			sal = #{sal}
+		WHERE empno = #{empno}
+	</update>
 </mapper>

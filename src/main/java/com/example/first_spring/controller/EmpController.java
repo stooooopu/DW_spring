@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,6 +24,8 @@ public class EmpController {
 	@Autowired
 	private EmpService empService;
 	
+	
+	@CrossOrigin(origins = {"*"})
 	@GetMapping("/emp")
 	public List<EmpVO> callEmpList(){
 		return empService.getAllempList();
@@ -84,9 +87,10 @@ public class EmpController {
 	
 	
 	// empTable에 insert
+	@CrossOrigin(origins = {"*"})
 	@PostMapping("/emp")
 	// count해주기 때문에 return intType
-	// @RequestBody : 파라미터로 넘어오는 VO를 대신 new해줌
+	// @RequestBody : 파라미터로 넘어오는 VO를 대신 new해줌 바디로 보내줌
 	public int callEmpSet(@RequestBody EmpVO empVo) {
 		System.out.println("사원이름은 : "+empVo.getEname());
 		System.out.println("사원번호는 : "+empVo.getEmpno());
@@ -100,6 +104,7 @@ public class EmpController {
 	} // 이렇게 받은걸 제이쿼리로 보냄
 	
 	// @DeleteMapping : 자원 삭제
+	@CrossOrigin(origins = {"*"}) 
 	@DeleteMapping("/emp/empno/{empno}")
 	public int callEmpRemove(@PathVariable("empno") int empno) {
 		return empService.getEmpRemoveCount(empno);
@@ -175,8 +180,10 @@ public class EmpController {
 	}
 	
 	// 사원번호가 7902인 사원 job을 SALESMAN, sal 3500으로 수정하시오
+	@CrossOrigin(origins = {"*"})
 	@PatchMapping("/emp/{empno}")
-	public int callEmpno(@RequestBody EmpVO vo, @PathVariable("empno") int empno) {
+	public int callEmpno(@RequestBody EmpVO vo,
+			@PathVariable("empno") int empno) {
 		// mapper에 set을 해줘야함
 		vo.setEmpno(empno);
 		return empService.updateEmpno(vo, empno);
@@ -202,5 +209,12 @@ public class EmpController {
 	@GetMapping("/emp/map/list")
 	public List<Map<String,Object>> callEmpMapList(){
 		return empService.getEmpMapList();
+	}
+	
+	@CrossOrigin(origins = {"*"})
+	@PatchMapping("/api/v1/emp/{empno}")
+	public int callApi(@RequestBody EmpVO vo,
+			@PathVariable("empno") int empno) {
+		return empService.getApi(empno, vo);
 	}
 }
